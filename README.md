@@ -1,91 +1,80 @@
-# *Removert*
+Removert
+---
 
-## What is removert?
-- Static map construction in the wild. 
-- A dynamic points removing tool by constructing a static map
-- The name is from the abbreviation of our title "***Remov***e-then-re***vert***" (IROS 2020): [paper](https://irap.kaist.ac.kr/publications/gskim-2020-iros.pdf), [video](https://youtu.be/M9PEGi5fAq8)
 
-## What can we do using removert? 
-- We can easily construct and save a static map. 
-- We can easily parse dynamic points 
+No ros version!
 
-## Example
-- [Video 1: KITTI 09](https://youtu.be/V6OcdNVQRwg) with [SuMa poses](http://jbehley.github.io/projects/surfel_mapping/)
-- [Video 2: MulRan dataset with poses from SC-LIO-SAM](https://youtu.be/UiYYrPMcIRU)
-<p align="center"><img src="docs/removert.png" width=900></p>
+pcd are enough to run this program. Need transformed and pose in VIEWPOINT. Please reference our dufomap benchmark for more detail.
 
-## Preparations
-- Step 1: Get a set of LiDAR scans and corresponding poses by running any open source LiDAR odometry or SLAM algorithm (e.g., [pose-and-scan saver of SC-LIO-SAM](https://github.com/gisbi-kim/SC-LIO-SAM#applications) or [pose-and-scan saver of SC-A-LOAM](https://github.com/gisbi-kim/SC-A-LOAM#utilities))
-- Step 2: Make a pair of a scan's point cloud and a corresponding pose using associated timestamps. We note that you need to save a scan as a binary format as KITTI and the pose file as a single text file where SE(3) poses are written line-by-line (12 numbers for a single line), which is also the equivalent format as KITTI odometry's ground truth pose txt file.
+TODO add DUFOmap benchmark link Here!!!
 
-## Requirements 
-- Based on C++17
-- ROS (and Eigen, PCL, OpenMP): the all examples in this readme are tested under Ubuntu 18.04 and ROS Melodic. 
-- FYI: We uses ROS's parameter parser for the convenience, despite no topic flows within our system (our repository currently runs at offline on the pre-prepared scans saved on a HDD or a SSD). But the speed is fast (over 10Hz for a single removing) and plan to extend to real-time slam integration in future.
+We will output all the scripts and dataset! Don't worry. We are working on it. 
+Message from [Qingwen ZHANG*](https://kin-zhang.github.io/) and [Daniel Duberg*](https://github.com/danielduberg)
 
-## How to use 
-- First, compile the source 
-```
-$ mkdir -p ~/catkin/removert_ws/src
-$ cd ~/catkin/removert_ws/src
-$ git clone https://github.com/irapkaist/removert.git
-$ cd ..
-$ catkin_make
-$ source devel/setup.bash
-```
-- Before to start the launch file, you need to replace data paths in the config/params.yaml file. More details about it, you can refer the above tutorial video ([KITTI 09](https://youtu.be/V6OcdNVQRwg))
+## Install & Build
 
-- Then, you can start the *Removert*
-```
-$ roslaunch removert run_kitti.launch # if you use KITTI dataset 
- or
-$ roslaunch removert run_scliosam.launch # see this tutorial: https://youtu.be/UiYYrPMcIRU
+Test computer and System:
+
+- Desktop setting: i9-12900KF, 64GB RAM, Swap 90GB, 1TB SSD
+- System setting: Ubuntu 20.04
+- Test Date: 2023/04/05
+- Modified Version commit: https://github.com/irapkaist/removert/tree/726f48b36b27eae9a84c75f07b953f8c791caf9b
+
+
+Dependencies:
+### PCL
+
+
+### glog gflag (only for debug)
+glog gflag for debug only, will remove on release version
+```sh
+sh -c "$(wget -O- https://raw.githubusercontent.com/Kin-Zhang/Kin-Zhang/main/Dockerfiles/latest_glog_gflag.sh)"
 ```
 
-- (Optional) we supports Matlab tools to visulaize comparasions of original/cleaned maps (see tools/matlab).
+### yaml-cpp
+Please set the FLAG, check this issue if you want to know more: https://github.com/jbeder/yaml-cpp/issues/682, [TOOD inside the CMakeLists.txt](https://github.com/jbeder/yaml-cpp/issues/566)
 
+If you install in Ubuntu 22.04, please check this commit: https://github.com/jbeder/yaml-cpp/commit/c86a9e424c5ee48e04e0412e9edf44f758e38fb9 which is the version could build in 22.04
 
-## Further Improvements 
-- We propose combining recent deep learning-based dynamic removal (e.g., [LiDAR-MOS](https://github.com/PRBonn/LiDAR-MOS)) and our method for better map cleaning 
-    - Deep learning-based removal could run online and good for proactive removal of bunch of points. 
-    - Removert currently runs offline but good at finer cleaning for the remained 3D points after LiDAR-MOS ran.     
-- A [tutorial video](https://youtu.be/zWuoqtDofsE) and an example result for the KITTI 01 sequence: 
-<p align="center"><img src="docs/fusion.png" width=550></p>
-
-## Contact 
+```sh
+cd ${Tmp_folder}
+git clone https://github.com/jbeder/yaml-cpp.git && cd yaml-cpp
+env CFLAGS='-fPIC' CXXFLAGS='-fPIC' cmake -Bbuild
+cmake --build build --config Release
+sudo cmake --build build --config Release --target install
 ```
-paulgkim@kaist.ac.kr
-```
-
-## Cite *Removert*
-```
-@INPROCEEDINGS { gskim-2020-iros,
-    AUTHOR = { Giseop Kim and Ayoung Kim },
-    TITLE = { Remove, then Revert: Static Point cloud Map Construction using Multiresolution Range Images },
-    BOOKTITLE = { Proceedings of the IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) },
-    YEAR = { 2020 },
-    MONTH = { Oct. },
-    ADDRESS = { Las Vegas },
-    NOTE = { Accepted. To appear. },
-}
+### Build
+```bash
+mkdir build && cd build
+cmake .. && make
 ```
 
-## License
- <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is supported by Naver Labs Corporation and by the National Research Foundation of Korea (NRF). This work is also licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+## RUN
 
-## TODO (in order)
-#### Near future 
-- Full sequence cleaned-scan saver by automatically iterating batches (because using 50-100 scans for a single batch is recommended for computation speed)
-- Adding revert steps (I think certainly removing dynamic points is generally more worthy for many applications, so reverting step is omitted currently)
-- Automatically parse dynamic segments from the dynamic points in a scan (e.g., using DBSCAN on dynamic points in a scan)
-- [x] Exmaples from MulRan dataset (for showing removert's availability for various LiDAR configurations) — see this [tutorial](https://youtu.be/UiYYrPMcIRU) 
-- [x] (scan, pose) pair saver using SC-LeGO-LOAM or [SC-LIO-SAM](https://github.com/gisbi-kim/SC-LIO-SAM#applications), which includes a loop closing that can make a globally consistent map. — see this [tutorial](https://youtu.be/UiYYrPMcIRU)
-- Examples from the arbitrary datasets using the above input data pair saver.
-- Providing a SemanticKITTI (as a truth) evaluation tool (i.e., calculating the number of points of TP, FP, TN, and FN) 
-- (Not certain now) Changing all floats to double
+```
+./removert_run /home/kin/workspace/DUFOMap/data/KITTI_00 ../config/seq_00.yaml
+```
 
-#### Future 
-- Real-time LiDAR SLAM integration for better odometry robust to dynamic objects in urban sites (e.g., with LIO-SAM in the Riverside sequences of MulRan dataset)
-- Multi-session (i.e., inter-session) change detection example
-- Defining and measuring the quality of a static map
-- Using the above measure, deciding when removing can be stopped with which resolution (generally 1-3 removings are empirically enough but for highly crowded environments such as urban roads) 
+I recommend to run 5-10 frames first to check the result, then run the whole sequence. Like here:
+```
+./removert_run /home/kin/workspace/DUFOMap/data/KITTI_00 ../config/seq_00.yaml 5
+```
+
+
+## Demo
+
+
+
+**But DUFOMap is better** than ERASOR and fastest! please check our benchmark here [TODO](TODO)
+
+DUFOMap Timing print in my desktop setting:
+```bash
+DUFOMap Timings
+         Component      Total   Last    Mean    StDev    Min     Max     Steps
+        1. Read          0.34   0.0022  0.0024  0.0007  0.0020  0.0079     141
+        2. Integrate     8.79   0.0587  0.0624  0.0136  0.0472  0.1694     141
+        3. Propagate     1.57   0.0107  0.0111  0.0033  0.0073  0.0320     141
+        4. Clustering    0.23   0.2308  0.2308    nan   0.2308  0.2308       1
+        5. Query         1.33   1.3294  1.3294    nan   1.3294  1.3294       1
+        6. Write         8.23   8.2331  8.2331    nan   8.2331  8.2331       1
+```
