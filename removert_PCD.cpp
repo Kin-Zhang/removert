@@ -101,21 +101,21 @@ int main(int argc, char **argv) {
     map_updater.timing.stop("5. Write        ");
 
     // set print color
-	map_updater.timing.setColor("0. Read RawMap  ", ufo::Timing::boldYellowColor());
-	map_updater.timing.setColor("1. Covert DepthI", ufo::Timing::boldCyanColor());
-	map_updater.timing.setColor("2. Compare Image", ufo::Timing::boldMagentaColor());
-	map_updater.timing.setColor("3. Get DynamicId", ufo::Timing::boldGreenColor());
+    map_updater.timing.setColor("0. Read RawMap  ", ufo::Timing::boldYellowColor());
+    map_updater.timing.setColor("1. Covert DepthI", ufo::Timing::boldCyanColor());
+    map_updater.timing.setColor("2. Compare Image", ufo::Timing::boldMagentaColor());
+    map_updater.timing.setColor("3. Get DynamicId", ufo::Timing::boldGreenColor());
     map_updater.timing.setColor("4. Parse Idx2Pcd", ufo::Timing::boldRedColor());
-	map_updater.timing.setColor("5. Write        ", ufo::Timing::boldRedColor());
-	printf("\nRemovert Timings:\n");
-	printf("\t Component\t\tTotal\tLast\tMean\tStDev\t Min\t Max\t Steps\n");
-	for (auto const& tag : map_updater.timing.tags()) {
-		printf("\t%s%s\t%5.2f\t%5.4f\t%5.4f\t%5.4f\t%5.4f\t%5.4f\t%6lu%s\n",
-		       map_updater.timing.color(tag).c_str(), tag.c_str(), map_updater.timing.totalSeconds(tag),
-		       map_updater.timing.lastSeconds(tag), map_updater.timing.meanSeconds(tag), map_updater.timing.stdSeconds(tag),
-		       map_updater.timing.minSeconds(tag), map_updater.timing.maxSeconds(tag), map_updater.timing.numSamples(tag),
-		       ufo::Timing::resetColor());
-	}
-    
+    map_updater.timing.setColor("5. Write        ", ufo::Timing::boldRedColor());
+    printf("\nRemovert Timings:\n");
+    printf("\t Component\t\tTotal\tLast\tMean\tStDev\t Min\t Max\t Steps\n");
+    for (auto const &tag : map_updater.timing.tags()) {
+        printf("\t%s%s\t%5.2f\t%5.4f\t%5.4f\t%5.4f\t%5.4f\t%5.4f\t%6lu%s\n", map_updater.timing.color(tag).c_str(),
+               tag.c_str(), map_updater.timing.totalSeconds(tag), map_updater.timing.lastSeconds(tag),
+               map_updater.timing.meanSeconds(tag), map_updater.timing.stdSeconds(tag),
+               map_updater.timing.minSeconds(tag), map_updater.timing.maxSeconds(tag),
+               map_updater.timing.numSamples(tag), ufo::Timing::resetColor());
+    }
+
     return 0;
 }
