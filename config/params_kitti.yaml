@@ -93,3 +93,5 @@ removert:
   # @ For visualization of range images (rviz -d removert_visualization.rviz)
   rimg_color_min: 0.0 # meter
   rimg_color_max: 20.0 # meter
+
+  replace_intensity: true

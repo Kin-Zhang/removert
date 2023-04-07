@@ -18,7 +18,7 @@ set(default_build_type "Release")
 find_package(Glog REQUIRED)
 find_package(gflags REQUIRED)
 set(LOG_LIB glog::glog gflags)
-
+find_package(OpenCV REQUIRED QUIET)
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(PCL REQUIRED)
@@ -29,10 +29,18 @@ set(FUN_LIB Eigen3::Eigen)
 #############
 include_directories(include)
 add_library(dufo_lib SHARED src/Removerter.cpp)
-target_link_libraries(dufo_lib ${LOG_LIB} yaml-cpp ${FUN_LIB} ${PCL_LIBRARIES})
+target_link_libraries(dufo_lib ${LOG_LIB} yaml-cpp ${FUN_LIB} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ############
 # BINARIES #
 ############
 add_executable(removert_run removert_PCD.cpp)
 target_link_libraries(removert_run dufo_lib)
+
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+	# print message to show the version of OpenMP
+	message(STATUS "OpenMP found, version: ${OpenMP_CXX_VERSION_STRING}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+    target_link_libraries(removert_run OpenMP::OpenMP_CXX)
+endif()

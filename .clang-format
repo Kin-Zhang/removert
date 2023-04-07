@@ -1,0 +1,19 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+AlignAfterOpenBracket: Align
+ContinuationIndentWidth: 4
+UseTab: Never
+BreakBeforeBraces: Attach
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+IndentCaseLabels: true
+ColumnLimit: 120
+AccessModifierOffset: -2
+NamespaceIndentation: All
+PointerAlignment: Right
+CommentPragmas: '^noformat'
+NamespaceIndentation: None
+---

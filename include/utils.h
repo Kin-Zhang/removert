@@ -7,13 +7,11 @@
  * Description: Config header
  */
 
-
 #pragma once
 
 #include <iostream>
-#include <string>
 #include <pcl/point_types.h>
-
+#include <string>
 
 #define ANSI_RED "\033[1m\x1b[31m"
 #define ANSI_GREEN "\033[1m\x1b[32m"
@@ -25,38 +23,25 @@
 #define ANSI_BOLD "\033[1m"
 
 // CHANGE Point Type Here!!! If you want to use XYZI, change to pcl::PointXYZI
-// typedef pcl::PointXYZ PointT;
-typedef pcl::PointXYZI PointT;
-// typedef pcl::PointXYZRGB PointT;
+// typedef pcl::PointXYZ PointType;
+typedef pcl::PointXYZI PointType;
+// typedef pcl::PointXYZRGB PointType;
 
 namespace common {
 struct Config {
-  /**< Parameters of MapUpdater*/
-  double query_voxel_size_;
-  double map_voxel_size_;
-  int removal_interval_;
-  int global_voxelization_period_;
+    /**< Parameters of MapUpdater*/
+    std::vector<double> remove_resolution_list_ = {2.5, 2.0, 1.5};
+    std::pair<float, float> kFOV = {60.0, 60.0};
+    bool verbose_ = false; // print out logs
+    int kNumOmpCores = 8;
 
-  /**< Params. of Volume of Interest (VoI) */
-  double max_range_;
-  int num_rings_, num_sectors_;
-  double min_h_, max_h_;
-  double th_bin_max_h, scan_ratio_threshold;
+    std::string mode = "naive";
+    bool replace_intensity = false;
 
-  double submap_size_;
-  double submap_center_x_;
-  double submap_center_y_;
-
-  double th_seeds_heights_ = 0.5;
-  double th_dist_ = 0.05;
-  int num_lprs_ = 10;
-  int minimum_num_pts = 6;
-  int iter_groundfilter_ = 3;
-  int num_lowest_pts = 5;
-  bool verbose_ = true;  // print out logs
-
-  std::string mode = "naive";
-  bool replace_intensity = false;
+    // NOT recommend to use for under 5 million points map input (becausing
+    // not-using is just faster)
+    const bool kUseSubsetMapCloud = false;
+    const float kBallSize = 80.0; // meter
 };
 
-}  // namespace common
+} // namespace common
