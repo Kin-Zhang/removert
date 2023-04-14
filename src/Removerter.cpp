@@ -55,7 +55,6 @@ void MapUpdater::run(const pcl::PointCloud<PointType>::Ptr &single_pc, float _rm
     auto [map_rimg, map_rimg_ptidx] = map2RangeImg(map_arranged_, cfg_.kFOV, rimg_shape);
     timing.stop("1. Covert DepthI");
 
-
     // debug to see the img.
     // cv::Mat dst;
     // cv::normalize(map_rimg, dst, 0, 1, cv::NORM_MINMAX);
@@ -66,12 +65,12 @@ void MapUpdater::run(const pcl::PointCloud<PointType>::Ptr &single_pc, float _rm
     timing.start("2. Compare Image");
     const int kNumRimgRow = rimg_shape.first;
     const int kNumRimgCol = rimg_shape.second;
-    cv::Mat diff_rimg =
-        cv::Mat(kNumRimgRow, kNumRimgCol, CV_32FC1, cv::Scalar::all(0.0)); // float matrix, save range value
+    // float matrix, save range value
+    cv::Mat diff_rimg = cv::Mat(kNumRimgRow, kNumRimgCol, CV_32FC1, cv::Scalar::all(0.0));
     cv::absdiff(scan_rimg, map_rimg, diff_rimg);
     timing.stop("2. Compare Image");
-    // 3. parse dynamic points
 
+    // 3. parse dynamic points
     timing.start("3. Get DynamicId");
     std::vector<int> this_scan_dynamic_point_indexes =
         calcDescrepancyAndParseDynamicPointIdx(scan_rimg, diff_rimg, map_rimg_ptidx);
@@ -84,7 +83,8 @@ void MapUpdater::parseDynamicIdx2PointCloud() {
     // remove repeated indexes
     std::set<int> dynamic_point_indexes_set(dynamic_point_indexes.begin(), dynamic_point_indexes.end());
     std::vector<int> dynamic_point_indexes_unique(dynamic_point_indexes_set.begin(), dynamic_point_indexes_set.end());
-    LOG_IF(INFO, cfg_.verbose_) << "Num of dynamic points: " << dynamic_point_indexes_unique.size() << " / " << map_arranged_->size();
+    LOG_IF(INFO, cfg_.verbose_) << "Num of dynamic points: " << dynamic_point_indexes_unique.size() << " / "
+                                << map_arranged_->size();
 
     // get pointcloud
     GetPointcloudUsingPtIdx(dynamic_point_indexes_unique, map_arranged_, map_cleaned_, true);
