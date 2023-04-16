@@ -106,3 +106,8 @@ DUFOMap Timings
 ## Issue record
 
 - [x] Eigen with Opencv, please check [this question](https://stackoverflow.com/questions/73806642/converting-cvmat-to-eigenmatrix-gives-compilation-error-from-opencv2-core-ei) if you want to know more.
+
+
+Note:
+
+- no revert part since for dense map, if you want to check the revert part, here is an issue: https://github.com/irapkaist/removert/issues/21
