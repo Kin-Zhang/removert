@@ -66,6 +66,7 @@ int main(int argc, char **argv) {
             run_max = total + 1;
         }
     }
+    LOG(INFO) << "rm res len: " << map_updater.cfg_.remove_resolution_list_.size();
     for (float _rm_res : map_updater.cfg_.remove_resolution_list_) {
         for (const auto &filename : filenames) {
             if (cnt > 1) {
@@ -90,7 +91,9 @@ int main(int argc, char **argv) {
             if (cnt > run_max)
                 break;
         }
-        break;
+        LOG(INFO) << "\nFinished res: " << _rm_res;
+        cnt = 1; // refresh
+        // break;
     }
     map_updater.timing.start("4. Parse Idx2Pcd");
     map_updater.parseDynamicIdx2PointCloud();

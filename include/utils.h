@@ -42,6 +42,8 @@ struct Config {
     // not-using is just faster)
     const bool kUseSubsetMapCloud = false;
     const float kBallSize = 80.0; // meter
+
+    float downsample_voxel_size_ = 0.05;
 };
 
 } // namespace common

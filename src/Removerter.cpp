@@ -14,9 +14,11 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
+#include <pcl/filters/extract_indices.h>
+#include <pcl/filters/voxel_grid.h>
 
 #include "Removerter.h"
-#include <pcl/filters/extract_indices.h>
+
 namespace removert {
 
 MapUpdater::MapUpdater(const std::string &config_file_path) {
@@ -29,12 +31,23 @@ MapUpdater::MapUpdater(const std::string &config_file_path) {
     map_cleaned_.reset(new pcl::PointCloud<PointType>());
     map_dynamic_.reset(new pcl::PointCloud<PointType>());
 }
-
+void VoxelPointCloud(const pcl::PointCloud<PointType>::Ptr& cloud, pcl::PointCloud<PointType>::Ptr& cloud_voxelized, const double voxel_size) {
+    if(voxel_size < 0.05) {
+        *cloud_voxelized = *cloud;
+        LOG_IF(WARNING, false) << "Voxel size is too small, no need to voxel grid filter!";
+        return;
+    }
+    pcl::VoxelGrid<PointType> voxel_grid;
+    voxel_grid.setInputCloud(cloud);
+    voxel_grid.setLeafSize(voxel_size, voxel_size, voxel_size);
+    voxel_grid.filter(*cloud_voxelized);
+}
 void MapUpdater::setRawMap(const pcl::PointCloud<PointType>::Ptr &raw_map) {
     // copy raw map to map_arranged
     timing.start("0. Read RawMap  ");
     map_arranged_.reset(new pcl::PointCloud<PointType>());
-    pcl::copyPointCloud(*raw_map, *map_arranged_);
+    VoxelPointCloud(raw_map, map_arranged_, cfg_.downsample_voxel_size_);
+    // pcl::copyPointCloud(*raw_map, *map_arranged_);
     timing.stop("0. Read RawMap  ");
 }
 
@@ -43,7 +56,8 @@ void MapUpdater::run(const pcl::PointCloud<PointType>::Ptr &single_pc, float _rm
     x_curr = single_pc->sensor_origin_[0];
     y_curr = single_pc->sensor_origin_[1];
     z_curr = single_pc->sensor_origin_[2];
-
+    pcl::PointCloud<PointType>::Ptr filter_pc(new pcl::PointCloud<PointType>());
+    VoxelPointCloud(single_pc, filter_pc, cfg_.downsample_voxel_size_);
     // filter spec (i.e., a shape of the range image)
     curr_res_alpha_ = _rm_res;
     std::pair<int, int> rimg_shape = resetRimgSize(cfg_.kFOV, _rm_res);
@@ -51,7 +65,7 @@ void MapUpdater::run(const pcl::PointCloud<PointType>::Ptr &single_pc, float _rm
 
     // 1. convert to range image
     timing.start("1. Covert DepthI");
-    cv::Mat scan_rimg = scan2RangeImg(single_pc, cfg_.kFOV, rimg_shape);
+    cv::Mat scan_rimg = scan2RangeImg(filter_pc, cfg_.kFOV, rimg_shape);
     auto [map_rimg, map_rimg_ptidx] = map2RangeImg(map_arranged_, cfg_.kFOV, rimg_shape);
     timing.stop("1. Covert DepthI");
 
@@ -124,6 +138,8 @@ void MapUpdater::setConfig() {
 
     cfg_.kNumOmpCores = yconfig["removert"]["num_omp_cores"].as<int>();
     cfg_.replace_intensity = yconfig["removert"]["replace_intensity"].as<bool>();
+
+    cfg_.downsample_voxel_size_ = yconfig["removert"]["downsample_voxel_size"].as<float>();
 }
 
 void MapUpdater::GetPointcloudUsingPtIdx(std::vector<int> &_point_indexes, pcl::PointCloud<PointType>::Ptr &_pointcloud,
