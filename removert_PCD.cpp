@@ -70,7 +70,6 @@ int main(int argc, char **argv) {
     for (float _rm_res : map_updater.cfg_.remove_resolution_list_) {
         for (const auto &filename : filenames) {
             if (cnt > 1) {
-                // LOG(INFO) << "IN";
                 std::ostringstream log_msg;
                 log_msg << "(" << cnt << "/" << run_max << ") Processing: " << filename << " Time Cost: "
                         << map_updater.timing.lastSeconds("1. Covert DepthI") +

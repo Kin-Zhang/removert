@@ -13,7 +13,6 @@ removert:
   sequence_vfov: 50 # including upper and lower fovs, for example, KITTI's HDL64E is 2 + 24.9 ~ 27 deg. (so 25 + 25 = 50 is recommended because it is enough)
   sequence_hfov: 360 # generally for targetting scanning LiDAR but a lidar having restricted hfov also just can use the 360 (because no point regions are considered in the algorithm)
 
-
   # @ Sampling nodes 
   use_keyframe_gap: true 
   keyframe_gap: 5 # i.e., 5 means every 5 frames // 5 is recommended for fast removing while preserving the static map's quality # if you make all scans clean, use this value = 1
@@ -52,7 +51,6 @@ removert:
   # @ For faster
   num_omp_cores: 16 # for faster map points projection (to make a map range image)
 
-  
   # @ For visualization of range images (rviz -d removert_visualization.rviz)
   rimg_color_min: 0.0 # meter
   rimg_color_max: 20.0 # meter
