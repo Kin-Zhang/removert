@@ -9,11 +9,11 @@ removert:
   #     - e.g., HDL 64E of KITTI dataset -> appx 25 deg / 64 ray ~ 0.4 deg per pixel -> the magnifier ratio = 1/0.4 = 2.5
   #     - e.g., Ouster OS1-64 of MulRan dataset -> appx 45 deg / 64 ray ~ 0.7 deg per pixel -> the magnifier ratio = 1/0.7 = 1.4
   # - recommend to use the first reverting resolution's magnifier ratio should lied in 1.0 to 1.5
-  remove_resolution_list: [2.5, 2.2, 2] # for HDL 64E of KITTI dataset -> Same with ERASOR paper benchmarking
+  remove_resolution_list: [2.5, 1.5] # for HDL 64E of KITTI dataset -> Same with ERASOR paper benchmarking
   # remove_resolution_list: [1.4, 1.1] # for Ouster OS1-64 of MulRan dataset
 
   # @ Removert params 
   # about density 
-  downsample_voxel_size: 0.01 # user parameter but recommend to use 0.05 to make sure an enough density (this value is related to the removing resolution's expected performance)
+  downsample_voxel_size: 0.0 # user parameter but recommend to use 0.05 to make sure an enough density (this value is related to the removing resolution's expected performance)
   num_omp_cores: 16 # for faster map points projection (to make a map range image)
   replace_intensity: false
