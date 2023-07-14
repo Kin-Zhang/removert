@@ -146,7 +146,11 @@ void MapUpdater::GetPointcloudUsingPtIdx(std::vector<int> &_point_indexes, pcl::
                                          pcl::PointCloud<PointType>::Ptr &_pointcloud_out, bool _is_negative) {
     // extractor
     pcl::ExtractIndices<PointType> extractor;
-    boost::shared_ptr<std::vector<int>> index_ptr = boost::make_shared<std::vector<int>>(_point_indexes);
+    #if PCL_VERSION_COMPARE(<, 1, 11, 0)
+        boost::shared_ptr<std::vector<int>> index_ptr = boost::make_shared<std::vector<int>>(_point_indexes);
+    #else
+        std::shared_ptr<std::vector<int>> index_ptr = std::make_shared<std::vector<int>>(_point_indexes);
+    #endif
     extractor.setInputCloud(_pointcloud);
     extractor.setIndices(index_ptr);
     // If set to true, you can extract point clouds outside the specified index

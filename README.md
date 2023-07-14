@@ -3,9 +3,9 @@ Removert
 
 No ros version!
 
-pcd are enough to run this program. Need transformed and pose in VIEWPOINT. Please reference our dufomap benchmark for more detail.
+pcd are enough to run this program. Need transformed and pose in VIEWPOINT. Please reference our DynamicMap benchmark for more detail.
 
-TODO add DUFOmap benchmark link Here!!!
+TODO add DynamicMap benchmark link Here!!!
 
 We will output all the scripts and dataset! Don't worry. We are working on it. 
 Message from [Qingwen ZHANG*](https://kin-zhang.github.io/) and [Daniel Duberg*](https://github.com/danielduberg)
@@ -52,6 +52,7 @@ env CFLAGS='-fPIC' CXXFLAGS='-fPIC' cmake -Bbuild
 cmake --build build --config Release
 sudo cmake --build build --config Release --target install
 ```
+
 ### Build
 ```bash
 mkdir build && cd build

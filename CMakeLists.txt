@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(erasor_noros
+project(removert_dynamic_map
 	VERSION 1.0.0
-	DESCRIPTION "ERASOR but no ros needed"
+	DESCRIPTION "Removert DynamicMap Benchmark"
 	LANGUAGES CXX
 )
 
@@ -34,14 +34,14 @@ set(FUN_LIB Eigen3::Eigen)
 # LIBRARIES #
 #############
 include_directories(include)
-add_library(dufo_lib SHARED src/Removerter.cpp)
-target_link_libraries(dufo_lib ${LOG_LIB} yaml-cpp ${FUN_LIB} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
+add_library(dm_lib SHARED src/Removerter.cpp)
+target_link_libraries(dm_lib ${LOG_LIB} yaml-cpp ${FUN_LIB} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ############
 # BINARIES #
 ############
 add_executable(removert_run removert_PCD.cpp)
-target_link_libraries(removert_run dufo_lib)
+target_link_libraries(removert_run dm_lib)
 
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
